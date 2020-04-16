@@ -1,0 +1,1 @@
+Prisma deploy: prisma deploy --env-file variables.env
