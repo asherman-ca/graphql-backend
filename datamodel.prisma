@@ -1,7 +1,19 @@
+# Schema for Prisma and the db underneath
+
 type User {
   id: ID! @id
   name: String!
   email: String!
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
+}
+
+type Item {
+  id: ID! @id
+  title: String!
+  description: String!
+  image: String
+  largeImage: String
+  price: Int!
+  # createAt: DateTime @createAt
+  # updatedAt: DateTime @updatedAt
+  # user: User!
 }
