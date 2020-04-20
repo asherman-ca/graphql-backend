@@ -1,3 +1,5 @@
+// the info variable contains the return data
+
 const Mutations = {
   async createItem(parent, args, ctx, info) {
     // TODO: check if they are logged in
@@ -9,6 +11,17 @@ const Mutations = {
     }, info);
 
     return item;
+  },
+  async updateItem(parent, args, ctx, info) {
+
+    const updates = { ...args };
+    delete updates.id;
+    return ctx.db.mutation.updateItem({
+      data: updates,
+      where: {
+        id: args.id
+      },
+    }, info);
   }
 };
 

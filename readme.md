@@ -22,3 +22,6 @@ Data creation flow (unit 14):
 
 notes:
 schema.graphql is the schema for yoga (aka express), which will largely mirror the prisma schema
+
+TODO:
+4/21-add image update interface to item update mutation
