@@ -1,9 +1,22 @@
 # Schema for Prisma and the db underneath
 
+enum Permission {
+  ADMIN
+  USER
+  ITEMCREATE
+  ITEMUPDATE
+  ITEMDELETE
+  PERMISSIONUPDATE
+}
+
 type User {
   id: ID! @id
   name: String!
-  email: String!
+  email: String! @unique
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: [Permission] @scalarList(strategy: RELATION)
 }
 
 type Item {
@@ -13,7 +26,22 @@ type Item {
   image: String
   largeImage: String
   price: Int!
-  # createAt: DateTime @createAt
-  # updatedAt: DateTime @updatedAt
-  # user: User!
 }
+
+
+# future post tag schema
+
+# type Post {
+#   title: String!
+#   img: String!
+# }
+
+# type PostTag {
+#   Post: Post!
+#   Tag: Tag!
+#   user: User!
+# }
+
+# type Tag {
+#   name: String!
+# }

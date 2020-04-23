@@ -1,4 +1,7 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 // the info variable contains the return data shape requested by the frontend
+// "a 2nd argument so it knows what data to return to the client"
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -31,6 +34,29 @@ const Mutations = {
     // 2 c TODO heck if they own item
     // 3 delete it
     return ctx.db.mutation.deleteItem({ where }, info);
+  },
+  async signup(parent, args, ctx, info) {
+    // in case people cap their emails
+    args.email = args.email.toLowerCase();
+    // hash their password
+    const password = await bcrypt.hash(args.password, 10);
+    // create user
+    const user = await ctx.db.mutation.createUser({
+      data: {
+        ...args,
+        password,
+        permissions: { set: ['USER'] }
+      }
+    }, info);
+    // create jwt for them
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    // set the JWT as a cookie on the response
+    ctx.response.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+    // return user to browser
+    return user;
   }
 };
 

@@ -29,3 +29,6 @@ TODO:
 Docs:
 https://www.prisma.io/tutorials/a-guide-to-common-resolver-patterns-ct08
 https://www.prisma.io/blog/graphql-server-basics-demystifying-the-info-argument-in-graphql-resolvers-6f26249f613a
+
+
+https://v1.prisma.io/docs/1.34/
