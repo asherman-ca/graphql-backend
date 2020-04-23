@@ -25,3 +25,7 @@ schema.graphql is the schema for yoga (aka express), which will largely mirror t
 
 TODO:
 4/21-add image update interface to item update mutation
+
+Docs:
+https://www.prisma.io/tutorials/a-guide-to-common-resolver-patterns-ct08
+https://www.prisma.io/blog/graphql-server-basics-demystifying-the-info-argument-in-graphql-resolvers-6f26249f613a

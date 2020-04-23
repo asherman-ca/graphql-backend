@@ -1,4 +1,4 @@
-// the info variable contains the return data
+// the info variable contains the return data shape requested by the frontend
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -22,6 +22,15 @@ const Mutations = {
         id: args.id
       },
     }, info);
+  },
+  async deleteItem(parent, args, ctx, info) {
+    const where = { id: args.id };
+    // 1 find the item
+    const item = await ctx.db.query.item({ where }, `{ id 
+      title}`);
+    // 2 c TODO heck if they own item
+    // 3 delete it
+    return ctx.db.mutation.deleteItem({ where }, info);
   }
 };
 

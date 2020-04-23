@@ -14,10 +14,14 @@ type Mutation {
     description: String,
     price: Int,
   ): Item!
+  deleteItem(
+    id: ID!,
+  ): Item!
 }
 
 type Query {
-  items: [Item]!
+  items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, first: Int): [Item]!
+  # item route could be written as: item(id: ID!): Item
   item(where: ItemWhereUniqueInput!): Item
-  # could be written as: item(id: ID!): Item
+  itemsConnection(where: ItemWhereInput): ItemConnection!
 }
