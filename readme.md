@@ -21,7 +21,8 @@ Data creation flow (unit 14):
 -write a resolver in mutation/query or both
 
 notes:
-schema.graphql is the schema for yoga (aka express), which will largely mirror the prisma schema
+schema.graphql is the schema / typing for yoga (aka express), which will largely mirror the prisma schema
+  so, yoga = inbound/outbound request/response facing and prisma = db facing
 
 TODO:
 4/21-add image update interface to item update mutation
