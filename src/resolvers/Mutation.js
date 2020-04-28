@@ -1,8 +1,4 @@
-// the info variable contains the return data shape requested by the frontend
-// "a 2nd argument so it knows what data to return to the client"
-// also prevents requerying already fetched information
-// this might be the best quote:
-// it "passes the query from the frontend"
+// info contains the graphql query from the frontend containing the fields we are requesting (also see bottom of doc)
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -15,10 +11,18 @@ const { transport, createEmailBody } = require('../mail');
 const Mutations = {
   async createItem(parent, args, ctx, info) {
     // TODO: check if they are logged in
+    if (!ctx.request.userId) {
+      throw new Error('You must be logged in');
+    }
 
     const item = await ctx.db.mutation.createItem({
       data: {
-        ...args
+        ...args,
+        user: {
+          connect: {
+            id: ctx.request.userId
+          }
+        }
       }
     }, info);
 
@@ -170,3 +174,9 @@ const Mutations = {
 };
 
 module.exports = Mutations;
+
+// the info variable contains the return data shape requested by the frontend
+// "a 2nd argument so it knows what data to return to the client"
+// also prevents requerying already fetched information
+// this might be the best quote:
+// it "passes the query from the frontend"

@@ -22,6 +22,19 @@ server.express.use((req, res, next) => {
   next();
 });
 
+// create a middleware that populates user on each request
+server.express.use(async (req, res, next) => {
+  if(!req.userId) return next();
+  const user = await db.query.user({
+    where: { id: req.userId }},
+    // the info variable is passed as a string literal graphql expression
+    '{ id, permissions, email, name }'
+  )
+  console.log('user', user)
+  req.user = user;
+  next();
+})
+
 server.start({
   cors: {
     credentials: true,
