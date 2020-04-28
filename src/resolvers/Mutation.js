@@ -1,14 +1,16 @@
+// the info variable contains the return data shape requested by the frontend
+// "a 2nd argument so it knows what data to return to the client"
+// also prevents requerying already fetched information
+// this might be the best quote:
+// it "passes the query from the frontend"
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // crypto is build into node
 const { randomBytes } = require('crypto');
 const { promisify } = require('util');
-// the info variable contains the return data shape requested by the frontend
-// "a 2nd argument so it knows what data to return to the client"
-// also prevents requerying already fetched information
 
-// this might be the best quote:
-// it "passes the query from the frontend"
+const { transport, createEmailBody } = require('../mail');
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -108,8 +110,24 @@ const Mutations = {
       },
     });
     console.log(res);
-    return { message: 'thanks' };
     // email them reset token
+
+    const messageBody = createEmailBody(`Your password reset link is here: \n\n <a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">Reset Password</a>`);
+    const message = {
+      from: 'asher@asher.com',
+      to: user.email,
+      subject: 'password reset',
+      text: messageBody
+    }
+    const mailRes = transport.sendMail(message, (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
+      }
+    })
+
+    return { message: 'thanks' };
   },
   async resetPassword(parent, { resetToken, password, confirmPassword }, ctx, info) {
     // check if passwords match

@@ -21,6 +21,8 @@ Data creation flow (unit 14):
 -write a resolver in mutation/query or both
 
 notes:
+-consider portmark for production mail service
+
 schema.graphql is the schema / typing for yoga (aka express), which will largely mirror the prisma schema
   so, yoga = inbound/outbound request/response facing and prisma = db facing
 
