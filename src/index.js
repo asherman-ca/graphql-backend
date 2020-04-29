@@ -30,7 +30,7 @@ server.express.use(async (req, res, next) => {
     // the info variable is passed as a string literal graphql expression
     '{ id, permissions, email, name }'
   )
-  console.log('user', user)
+  // console.log('user', user)
   req.user = user;
   next();
 })

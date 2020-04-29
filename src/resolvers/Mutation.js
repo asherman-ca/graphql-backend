@@ -7,6 +7,7 @@ const { randomBytes } = require('crypto');
 const { promisify } = require('util');
 
 const { transport, createEmailBody } = require('../mail');
+const { hasPermission } = require('../utils');
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -43,9 +44,16 @@ const Mutations = {
     const where = { id: args.id };
     // 1 find the item
     const item = await ctx.db.query.item({ where }, `{ id 
-      title}`);
-    // 2 c TODO heck if they own item
+      title user { id }}`);
+    // 2 TODO heck if they own item or have permissions
+    const hasItemOwnership = item.user.id === ctx.request.userId;
+    const hasPermissions = ctx.request.user.permissions.some(permission => {
+      return ['ADMIN', 'ITEMDELETE'].includes(permission)
+    });
     // 3 delete it
+    if(!hasItemOwnership && !hasPermissions) {
+      throw new Error('Insufficient Elevation');
+    }
     return ctx.db.mutation.deleteItem({ where }, info);
   },
   async signup(parent, args, ctx, info) {
@@ -170,6 +178,30 @@ const Mutations = {
     });
     // return the new user
     return updatedUser;
+  },
+  async updatePermissions(parent, args, ctx, info) {
+    // check if logged in
+    if(!ctx.request.userId){
+      throw new Error('Must be logged in')
+    }
+    // query current user
+    const currentUser = await ctx.db.query.user({
+      where: {
+        id: ctx.request.userId,
+      }
+    }, info);
+    // check permissions
+    hasPermission(currentUser, ['ADMIN', 'PERMISSIONUPDATE']);
+    // update permissions
+    return ctx.db.mutation.updateUser({
+      where: { id: args.userId },
+      data: {
+        permissions: {
+          // must be set like this because of prisma enum rules
+          set: args.permissions
+        }
+      }
+    }, info)
   }
 };
 
