@@ -209,6 +209,7 @@ const Mutations = {
       throw new Error('Please log in')
     }
     // query current cart
+    // TODO: investigate why i didnt need to pass the info variable in this query
     const [existingCartItem] = await ctx.db.query.cartItems({
       where: {
         user: { id: ctx.request.userId },
@@ -233,6 +234,23 @@ const Mutations = {
           connect: { id: args.id }
         }
       }
+    }, info)
+  },
+  async removeFromCart(parent, args, ctx, info) {
+    // find cart item
+    const cartItem = await ctx.db.query.cartItem({
+      where: {
+        id: args.id
+      }
+    }, `{ id, user { id }}`)
+    if (!cartItem) throw new Error('No Cart item found')
+    // make sure they own item
+    if(cartItem.user.id !== ctx.request.userId) {
+      throw new Error('Logged in user id doesnt match cart item user id')
+    }
+    // delete cart item
+    return ctx.db.mutation.deleteCartItem({
+      where: { id: args.id }
     }, info)
   }
 };
