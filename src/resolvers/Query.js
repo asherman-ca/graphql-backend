@@ -33,7 +33,7 @@ const Query = {
   async order(parent, args, ctx, info) {
     // ensure logged in
     if (!ctx.request.userId) {
-      throw new Error('You must be logged in to view orders')
+      throw new Error('You must be logged in to view order')
     }
     // query current order
     const order = await ctx.db.query.order({
@@ -47,6 +47,16 @@ const Query = {
     }
     // return the order
     return order
+  },
+  async orders(parent, args, { request: { userId }}, info) {
+    // ensure logged in
+    if (!userId) {
+      throw new Error('Must be signed in to view orders')
+    }
+    // query orders by user id
+    return ctx.db.query.users({
+      where: { user: { id: userId}}
+    }, info)
   }
 }
 
