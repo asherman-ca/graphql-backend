@@ -48,13 +48,14 @@ const Query = {
     // return the order
     return order
   },
-  async orders(parent, args, { request: { userId }}, info) {
+  async orders(parent, args, ctx, info) {
+    const { userId } = ctx.request
     // ensure logged in
     if (!userId) {
       throw new Error('Must be signed in to view orders')
     }
     // query orders by user id
-    return ctx.db.query.users({
+    return ctx.db.query.orders({
       where: { user: { id: userId}}
     }, info)
   }
