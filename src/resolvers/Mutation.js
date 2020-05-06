@@ -1,11 +1,10 @@
 // info contains the graphql query from the frontend containing the fields we are requesting (also see bottom of doc)
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // crypto is build into node
+const stripe = require('../stripe');
 const { randomBytes } = require('crypto');
 const { promisify } = require('util');
-
 const { transport, createEmailBody } = require('../mail');
 const { hasPermission } = require('../utils');
 
@@ -267,10 +266,10 @@ const Mutations = {
       cart {
         id
         quantity
-        item { title price id description image }
+        item { title price id description image largeImage }
       }}`
     );
-    // 2. recalculate the total for the price
+    // 2. recalculate the total for the price in case user tries to spoof price through token
     const amount = user.cart.reduce(
       (tally, cartItem) => tally + cartItem.item.price * cartItem.quantity,
       0
@@ -283,9 +282,35 @@ const Mutations = {
       source: args.token,
     });
     // 4. Convert the CartItems to OrderItems
+    const orderItems = user.cart.map(cartItem => {
+      const orderItem = {
+        ...cartItem.item,
+        quantity: cartItem.quantity,
+        user: { connect: { id: userId } },
+      };
+      delete orderItem.id;
+      return orderItem;
+    });
+
     // 5. create the Order
+    const order = await ctx.db.mutation.createOrder({
+      data: {
+        total: charge.amount,
+        charge: charge.id,
+        items: { create: orderItems },
+        user: { connect: { id: userId } },
+      },
+    });
     // 6. Clean up - clear the users cart, delete cartItems
+    const cartItemIds = user.cart.map(cartItem => cartItem.id);
+    // another very flexible query provided out of the box by Prisma
+    await ctx.db.mutation.deleteManyCartItems({
+      where: {
+        id_in: cartItemIds,
+      },
+    });
     // 7. Return the Order to the client
+    return order;
   },
 };
 

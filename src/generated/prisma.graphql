@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/ashermanca-58bc76/sandbox-db/dev
-# timestamp: Tue May 05 2020 16:15:15 GMT-0700 (PDT)
+# timestamp: Tue May 05 2020 20:53:40 GMT-0700 (PDT)
 
 type AggregateCartItem {
   count: Int!
@@ -946,8 +946,8 @@ type OrderItem implements Node {
   id: ID!
   title: String!
   description: String!
-  image: String!
-  largeImage: String!
+  image: String
+  largeImage: String
   price: Int!
   quantity: Int!
   user: User
@@ -967,8 +967,8 @@ input OrderItemCreateInput {
   id: ID
   title: String!
   description: String!
-  image: String!
-  largeImage: String!
+  image: String
+  largeImage: String
   price: Int!
   quantity: Int
   user: UserCreateOneInput
@@ -1009,8 +1009,8 @@ type OrderItemPreviousValues {
   id: ID!
   title: String!
   description: String!
-  image: String!
-  largeImage: String!
+  image: String
+  largeImage: String
   price: Int!
   quantity: Int!
 }
