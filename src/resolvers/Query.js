@@ -30,11 +30,29 @@ const Query = {
     // info contains the graphql query from the frontend containing the fields we are requesting
     return ctx.db.query.users({}, info);
   },
+  async order(parent, args, ctx, info) {
+    // ensure logged in
+    if (!ctx.request.userId) {
+      throw new Error('You must be logged in to view orders')
+    }
+    // query current order
+    const order = await ctx.db.query.order({
+      where: { id: args.id }
+    }, info)
+    // check permissions to see this order
+    const isOwner = order.user.id === ctx.request.userId
+    const isElevated = ctx.request.user.permissions.includes('ADMIN')
+    if (!isOwner && !isElevated) {
+      throw new Error('Insufficient elevation')
+    }
+    // return the order
+    return order
+  }
 }
 
 module.exports = Query;
 
-// because this has no logic it can be simplified as shown above
+// because this has no logic it can be simplified as shown above with forwardTo
 
 const simpleQuery = {
   async items(parent, args, ctx, info) {

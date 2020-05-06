@@ -40,6 +40,7 @@ type Query {
   me: User
   # an array itself is a required return but there can be nothing inside it
   users: [User]!
+  order(id: ID!): Order
 }
 
 # we don't want to provide all user interfaces so we specify the type here
