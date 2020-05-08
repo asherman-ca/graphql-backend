@@ -1,7 +1,16 @@
 // DEPLOYMENT
 1. Prisma Server
+  - this is the db by itself, no logic just graphql schema on top of postgres
+  - the Prisma deploy doesnt involve git or deploying code
+  - it uses the datamodel.prisma file to setup a db on heroku without attached logic
+  - prisma deploy command and then chosing an existing db
 2. Yoga Server
+  - this is the real express server
+  - heroku apps:create sandbox-yoga-prod
+  - git push heroku
 3. React/Next Server
+
+- change mail host to postmark or mailjet or mandril
 
 Prisma dev deploy: prisma deploy --env-file variables.env
 <!-- I think this opened the dialogue to change the deploy target and deploy -->
@@ -44,3 +53,8 @@ https://v1.prisma.io/docs/1.34/
 
 // PRISMA CONSOLE
 https://app.prisma.io/
+
+// CLOUD SERVICES
+-stripe
+-cloudinary
+-prisma
