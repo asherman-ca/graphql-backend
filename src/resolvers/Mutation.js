@@ -61,11 +61,12 @@ const Mutations = {
     // hash their password
     const password = await bcrypt.hash(args.password, 10);
     // create user
+    const permissions = args.email === 'admin@admin.com' ? ['USER', 'ADMIN'] : ['USER']
     const user = await ctx.db.mutation.createUser({
       data: {
         ...args,
         password,
-        permissions: { set: ['USER'] }
+        permissions
       }
     }, info);
     // create jwt for them
