@@ -1,4 +1,11 @@
-Prisma deploy: prisma deploy --env-file variables.env
+// DEPLOYMENT
+1. Prisma Server
+2. Yoga Server
+3. React/Next Server
+
+Prisma dev deploy: prisma deploy --env-file variables.env
+<!-- I think this opened the dialogue to change the deploy target and deploy -->
+Prisma prod deploy: npm run deploy -- -n
 
 graphql playground syntax exp:
 
@@ -32,6 +39,8 @@ TODO:
 Docs:
 https://www.prisma.io/tutorials/a-guide-to-common-resolver-patterns-ct08
 https://www.prisma.io/blog/graphql-server-basics-demystifying-the-info-argument-in-graphql-resolvers-6f26249f613a
-
-
+https://app.prisma.io/
 https://v1.prisma.io/docs/1.34/
+
+// PRISMA CONSOLE
+https://app.prisma.io/
